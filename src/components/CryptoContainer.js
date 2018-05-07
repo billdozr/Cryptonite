@@ -5,6 +5,7 @@ import {
   Animated,
   StyleSheet,
   ScrollView,
+  Dimensions,
   RefreshControl,
   TouchableWithoutFeedback
 } from 'react-native'
@@ -15,10 +16,13 @@ import FetchCoinData from '../Actions/FetchCoinData'
 import CoinCard from './CoinCard'
 import CoinDetail from './CoinDetail'
 
+const {height, width} = Dimensions.get('window')
+
 class CryptoContainer extends Component {
   state = {
     selectedId: null,
-    openProgress: new Animated.Value(1)
+    openProgress: new Animated.Value(1),
+    showClose: false
   }
 
   componentDidMount() {
@@ -47,7 +51,7 @@ class CryptoContainer extends Component {
                 duration: 300,
                 useNativeDriver: true
               }
-            ).start(() => this.setState({selectedId: key}))
+            ).start(() => this.setState({selectedId: key, showClose: false}))
           }}>
           <View>
             <CoinCard
@@ -82,6 +86,7 @@ class CryptoContainer extends Component {
         percent_change_7d={coin.quotes.USD.percent_change_7d}
         total_supply={coin.total_supply}
         max_supply={coin.max_supply}
+        showClose={this.state.showClose}
         onClose={(id) => this.setState({selectedId: null})}
       />
     )
@@ -101,7 +106,27 @@ class CryptoContainer extends Component {
       )
     } else {
       if (this.state.selectedId) {
-        return this.renderCoinDetail(this.state.selectedId)
+        Animated.timing(
+          this.state.openProgress,
+          {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true
+          }
+        ).start(() => this.setState({showClose: true}))
+        return (
+          <Animated.View style={{
+            opacity: this.state.openProgress,
+            transform: [{
+              translateY: this.state.openProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [height / 2, 0]
+              })
+            }]
+          }}>
+            {this.renderCoinDetail(this.state.selectedId)}
+          </Animated.View>
+        )
       } else {
         return (
           <ScrollView

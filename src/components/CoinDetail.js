@@ -110,10 +110,11 @@ const CoinDetail = ({
   id, symbol, coin_name, price_usd,
   percent_change_24h, percent_change_7d,
   total_supply, max_supply,
-  onClose
+  showClose, onClose
 }) => {
-  return (
-    <View style={container}>
+  let closeButtonComp
+  if (showClose) {
+    closeButtonComp = (
       <View style={closeContainer}>
         <TouchableOpacity
           onPress={() => onClose(id)}
@@ -121,6 +122,11 @@ const CoinDetail = ({
           <Text style={closeText}>Close</Text>
         </TouchableOpacity>
       </View>
+    )
+  }
+  return (
+    <View style={container}>
+      {closeButtonComp}
       <View style={upperRow}>
         <Image
           style={image}
