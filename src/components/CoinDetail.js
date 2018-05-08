@@ -107,10 +107,8 @@ const {
 } = styles
 
 const CoinDetail = ({
-  id, symbol, coin_name, price_usd,
-  percent_change_24h, percent_change_7d,
-  total_supply, max_supply,
-  showClose, onClose
+  id, symbol, coin_name, price_usd, percent_change_24h, percent_change_7d,
+  total_supply, max_supply, showClose, onClose
 }) => {
   let closeButtonComp
   if (showClose) {

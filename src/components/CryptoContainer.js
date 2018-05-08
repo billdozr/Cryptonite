@@ -25,6 +25,8 @@ class CryptoContainer extends Component {
     showClose: false
   }
 
+  coinsPosY = {}
+
   componentDidMount() {
     this.props.FetchCoinData()
   }
@@ -43,6 +45,7 @@ class CryptoContainer extends Component {
       return (
         <TouchableWithoutFeedback
           key={key}
+          onLayout={(e) => this.coinsPosY[key] = e.nativeEvent.layout.y}
           onPress={() => {
             Animated.timing(
               this.state.openProgress,
@@ -120,7 +123,7 @@ class CryptoContainer extends Component {
             transform: [{
               translateY: this.state.openProgress.interpolate({
                 inputRange: [0, 1],
-                outputRange: [height / 2, 0]
+                outputRange: [Math.min(height, this.coinsPosY[this.state.selectedId]), 0]
               })
             }]
           }}>
