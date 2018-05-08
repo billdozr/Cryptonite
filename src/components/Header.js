@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native'
 const Header = () => {
   return (
     <View style={styles.headerContainer}>
-      <Text style={styles.header}>Cryptocurrency</Text>
+      <Text style={styles.header}>Cryptonite</Text>
     </View>
   )
 }
@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingTop: 45,
     paddingBottom: 20,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
+    backgroundColor: '#d3d3d3',
     borderColor: '#edecea',
     alignItems: "center",
     shadowColor: "#edecea",
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
     }
   },
   header: {
+    color: '#009900',
     fontWeight: "bold",
     fontSize: 20
   }

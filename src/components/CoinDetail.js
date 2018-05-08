@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around"
   },
   percentChangePlus: {
-    color: "#00BFA5",
+    color: "#009900",
     fontWeight: "bold",
     marginLeft: 5
   },
