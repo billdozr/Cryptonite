@@ -41,7 +41,7 @@ class CryptoContainer extends Component {
     return ids
   }
 
-  renderCoinCard() {
+  renderCoinCards() {
     const { crypto } = this.props
     return this._sortedIdsByRank(crypto.data).map((key) => {
       let coin = crypto.data[key]
@@ -96,7 +96,7 @@ class CryptoContainer extends Component {
     )
   }
 
-  renderCoinCardScreen() {
+  renderCoinCardsScreen() {
     return (
       <View>
         <Header title='Cryptonite'/>
@@ -109,7 +109,7 @@ class CryptoContainer extends Component {
             />
           }>
           <Animated.View style={{opacity: this.state.openProgress}}>
-            {this.renderCoinCard()}
+            {this.renderCoinCards()}
           </Animated.View>
         </ScrollView>
       </View>
@@ -172,7 +172,7 @@ class CryptoContainer extends Component {
       if (this.state.selectedId) {
         return this.renderCoinDetailScreen(this.state.selectedId)
       } else {
-        return this.renderCoinCardScreen()
+        return this.renderCoinCardsScreen()
       }
     }
   }
