@@ -32,7 +32,7 @@ class CryptoContainer extends Component {
   }
 
   _sortedIdsByRank(data) {
-    const idsWithRanks = Object.keys(data).map((key) => [key, data[key].rank])
+    const idsWithRanks = Object.keys(data || {}).map((key) => [key, data[key].rank])
     idsWithRanks.sort((a, b) => a[1] - b[1])
     const ids = idsWithRanks.map((a) => a[0])
     return ids
