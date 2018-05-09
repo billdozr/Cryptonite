@@ -1,10 +1,12 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-const Header = () => {
+const Header = ({title, leftButton, rightButton}) => {
   return (
     <View style={styles.headerContainer}>
-      <Text style={styles.header}>Cryptonite</Text>
+      <View style={styles.leftButton}>{leftButton}</View>
+      <Text style={styles.title}>{title}</Text>
+      <View style={styles.rightButton}>{rightButton}</View>
     </View>
   )
 }
@@ -27,10 +29,20 @@ const styles = StyleSheet.create({
       height: 2
     }
   },
-  header: {
+  title: {
     color: '#009900',
     fontWeight: "bold",
     fontSize: 20
+  },
+  leftButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20
+  },
+  rightButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20
   }
 });
 

@@ -3,11 +3,45 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
-  TouchableOpacity
+  StyleSheet
 } from 'react-native'
 
 import { images } from '../Utils/CoinIcons'
+
+const CoinDetail = ({
+  id, symbol, coin_name, price_usd, percent_change_24h, percent_change_7d,
+  total_supply, max_supply
+}) => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.upperRow}>
+        <Image
+          style={styles.image}
+          source={{uri: images[symbol]}} />
+        <Text style={styles.coinSymbol}>{symbol}</Text>
+        <Text style={styles.coinPrice}>{price_usd}
+            <Text style={styles.moneySymbol}> $ </Text>
+        </Text>
+      </View>
+      <View style={styles.statisticsContainer}>
+        <Text>24h:
+          <Text style={percent_change_24h < 0 ? styles.percentChangeMinus : styles.percentChangePlus }> {percent_change_24h} % </Text>
+        </Text>
+        <Text>7d:
+          <Text style={percent_change_7d < 0 ? styles.percentChangeMinus : styles.percentChangePlus }> {percent_change_7d} % </Text>
+        </Text>
+      </View>
+      <View style={styles.statisticsContainer}>
+        <Text>
+          Total supply: <Text style={styles.supply}>{total_supply}</Text>
+        </Text>
+        <Text>
+          Max: <Text style={styles.supply}>{max_supply ? max_supply : 'undefined'}</Text>
+        </Text>
+      </View>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -25,11 +59,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 5,
     fontWeight: "bold"
-  },
-  coinName: {
-    marginTop: 10,
-    marginLeft: 5,
-    marginRight: 20
   },
   seperator: {
     marginTop: 10
@@ -67,93 +96,7 @@ const styles = StyleSheet.create({
   },
   supply: {
     fontWeight: "bold"
-  },
-  closeContainer: {
-    position: 'absolute',
-    top: -50,
-    left: 10,
-    opacity: 0.5
-  },
-  closeText: { color: 'white', backgroundColor: 'transparent' },
-  closeButton: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    borderWidth: 1,
-    borderColor: 'white',
-    padding: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'white',
-    borderRadius: 5
   }
 })
-
-const { 
-  container,
-  image,
-  moneySymbol,
-  upperRow,
-  coinSymbol,
-  coinName,
-  coinPrice,
-  statisticsContainer,
-  seperator,
-  percentChangePlus,
-  percentChangeMinus,
-  supply,
-  closeContainer,
-  closeText,
-  closeButton
-} = styles
-
-const CoinDetail = ({
-  id, symbol, coin_name, price_usd, percent_change_24h, percent_change_7d,
-  total_supply, max_supply, showClose, onClose
-}) => {
-  let closeButtonComp
-  if (showClose) {
-    closeButtonComp = (
-      <View style={closeContainer}>
-        <TouchableOpacity
-          onPress={() => onClose(id)}
-          style={closeButton}>
-          <Text style={closeText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-  return (
-    <View style={container}>
-      {closeButtonComp}
-      <View style={upperRow}>
-        <Image
-          style={image}
-          source={{uri: images[symbol]}} />
-        <Text style={coinSymbol}>{symbol}</Text>
-        <Text style={seperator}>|</Text>
-        <Text style={coinName}>{coin_name}</Text>
-        <Text style={coinPrice}>{price_usd}
-            <Text style={moneySymbol}> $ </Text>
-        </Text>
-      </View>
-      <View style={statisticsContainer}>
-        <Text>24h:
-          <Text style={percent_change_24h < 0 ? percentChangeMinus : percentChangePlus }> {percent_change_24h} % </Text>
-        </Text>
-        <Text>7d:
-          <Text style={percent_change_7d < 0 ? percentChangeMinus : percentChangePlus }> {percent_change_7d} % </Text>
-        </Text>
-      </View>
-      <View style={statisticsContainer}>
-        <Text>
-          Total supply: <Text style={supply}>{total_supply}</Text>
-        </Text>
-        <Text>
-          Max: <Text style={supply}>{max_supply ? max_supply : 'undefined'}</Text>
-        </Text>
-      </View>
-    </View>
-  )
-}
 
 export default CoinDetail

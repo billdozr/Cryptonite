@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
+  Text,
   Animated,
   StyleSheet,
   ScrollView,
   Dimensions,
   RefreshControl,
+  TouchableOpacity,
   TouchableWithoutFeedback
 } from 'react-native'
 
@@ -15,6 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import FetchCoinData from '../Actions/FetchCoinData'
 import CoinCard from './CoinCard'
 import CoinDetail from './CoinDetail'
+import { Header } from '.';
 
 const {height, width} = Dimensions.get('window')
 
@@ -89,9 +92,66 @@ class CryptoContainer extends Component {
         percent_change_7d={coin.quotes.USD.percent_change_7d}
         total_supply={coin.total_supply}
         max_supply={coin.max_supply}
-        showClose={this.state.showClose}
-        onClose={(id) => this.setState({selectedId: null})}
       />
+    )
+  }
+
+  renderCoinCardScreen() {
+    return (
+      <View>
+        <Header title='Cryptonite'/>
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.crypto.isFetching}
+              onRefresh={() => setTimeout(this.props.FetchCoinData, 600)}
+            />
+          }>
+          <Animated.View style={{opacity: this.state.openProgress}}>
+            {this.renderCoinCard()}
+          </Animated.View>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  renderCoinDetailScreen(id) {
+    Animated.timing(
+      this.state.openProgress,
+      {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true
+      }
+    ).start(() => this.setState({showClose: true}))
+    return (
+      <View>
+        <Header
+          title={this.props.crypto.data[this.state.selectedId].name}
+          leftButton={
+            this.state.showClose ? (
+              <View style={styles.closeContainer}>
+                <TouchableOpacity
+                  onPress={() => this.setState({selectedId: null})}
+                  style={styles.closeButton}>
+                  <Text style={styles.closeText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null
+          } />
+        <Animated.View style={{
+          opacity: this.state.openProgress,
+          transform: [{
+            translateY: this.state.openProgress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [Math.min(height, this.coinsPosY[this.state.selectedId]), 0]
+            })
+          }]
+        }}>
+          {this.renderCoinDetail(this.state.selectedId)}
+        </Animated.View>
+      </View>
     )
   }
 
@@ -99,6 +159,7 @@ class CryptoContainer extends Component {
     if (this.props.crypto.isFetching) {
       return (
         <View>
+          <Header title='Cryptonite'/>
           <Spinner
             visible={this.props.crypto.isFetching}
             textContent={"Loading..."}
@@ -109,42 +170,9 @@ class CryptoContainer extends Component {
       )
     } else {
       if (this.state.selectedId) {
-        Animated.timing(
-          this.state.openProgress,
-          {
-            toValue: 1,
-            duration: 800,
-            useNativeDriver: true
-          }
-        ).start(() => this.setState({showClose: true}))
-        return (
-          <Animated.View style={{
-            opacity: this.state.openProgress,
-            transform: [{
-              translateY: this.state.openProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [Math.min(height, this.coinsPosY[this.state.selectedId]), 0]
-              })
-            }]
-          }}>
-            {this.renderCoinDetail(this.state.selectedId)}
-          </Animated.View>
-        )
+        return this.renderCoinDetailScreen(this.state.selectedId)
       } else {
-        return (
-          <ScrollView
-            contentContainerStyle={styles.contentContainer}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.props.crypto.isFetching}
-                onRefresh={() => setTimeout(this.props.FetchCoinData, 600)}
-              />
-            }>
-            <Animated.View style={{opacity: this.state.openProgress}}>
-              {this.renderCoinCard()}
-            </Animated.View>
-          </ScrollView>
-        )
+        return this.renderCoinCardScreen()
       }
     }
   }
@@ -154,6 +182,21 @@ const styles = {
   contentContainer: {
     paddingBottom: 110,
     paddingTop: 20
+  },
+  closeContainer: {
+    opacity: 0.5
+  },
+  closeText: { color: 'white', backgroundColor: 'transparent' },
+  closeButton: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderWidth: 1,
+    borderColor: 'white',
+    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'white',
+    borderRadius: 5
   }
 }
 
