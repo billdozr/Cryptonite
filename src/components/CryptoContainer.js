@@ -128,7 +128,7 @@ class CryptoContainer extends Component {
     return (
       <View>
         <Header
-          title={this.props.crypto.data[this.state.selectedId].name}
+          title={this.state.showClose ? this.props.crypto.data[this.state.selectedId].name : 'Cryptonite'}
           leftButton={
             this.state.showClose ? (
               <View style={styles.closeContainer}>
