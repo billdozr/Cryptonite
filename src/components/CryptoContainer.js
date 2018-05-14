@@ -131,12 +131,14 @@ class CryptoContainer extends Component {
         useNativeDriver: true
       }
     ).start(() => this.setState({showClose: true}))
+
+    const showClose = this.coinsPosY[this.state.selectedId] === 0 ? true : this.state.showClose
     return (
       <View style={{flex: 1}}>
         <Header
-          title={this.state.showClose ? crypto.data[this.state.selectedId].name : 'Cryptonite'}
+          title={showClose ? crypto.data[this.state.selectedId].name : 'Cryptonite'}
           leftButton={
-            this.state.showClose ? (
+            showClose ? (
               <View style={styles.closeContainer}>
                 <TouchableOpacity
                   onPress={() => this.setState({selectedId: null})}
@@ -158,10 +160,11 @@ class CryptoContainer extends Component {
           }}>
             {this.renderCoinDetail(this.state.selectedId)}
           </Animated.View>
-          {this.state.showClose ?
+          <Animated.View style={{opacity: this.state.openProgress}}>
             <CoinRelatedNews
               posts={this._newsByCoin(crypto.news, crypto.data[this.state.selectedId].symbol)}
-            /> : null}
+            />
+          </Animated.View>
         </ScrollView>
       </View>
     )
