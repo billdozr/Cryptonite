@@ -30,6 +30,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "expo": "^26.0.0",
+    "moment": "^2.22.1",
     "react": "16.3.0",
     "react-native": "~0.54.1",
     "react-native-loading-spinner-overlay": "^0.5.2",

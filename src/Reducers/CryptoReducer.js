@@ -7,6 +7,7 @@ import {
 const initialState = {
   isFetching: false,
   data: {},
+  news: [],
   hasError: false,
   errorMessage: null
 }
@@ -17,6 +18,7 @@ export default function(state = initialState, action) {
       return Object.assign({}, state, {
         isFetching: true,
         data: null,
+        news: null,
         hasError: false,
         errorMessage: null
       })
@@ -24,6 +26,7 @@ export default function(state = initialState, action) {
       return Object.assign({}, state, {
         isFetching: false,
         data: action.payload.data,
+        news: action.payload.news,
         hasError: false,
         errorMessage: null
       })

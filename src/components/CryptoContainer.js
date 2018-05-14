@@ -17,6 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import FetchCoinData from '../Actions/FetchCoinData'
 import CoinCard from './CoinCard'
 import CoinDetail from './CoinDetail'
+import CoinRelatedNews from './CoinRelatedNews'
 import { Header } from '.';
 
 const {height, width} = Dimensions.get('window')
@@ -39,6 +40,10 @@ class CryptoContainer extends Component {
     idsWithRanks.sort((a, b) => a[1] - b[1])
     const ids = idsWithRanks.map((a) => a[0])
     return ids
+  }
+
+  _newsByCoin(news, symbol) {
+    return news.filter((post) => post.currencies.map((c) => c.code).includes(symbol))
   }
 
   renderCoinCards() {
@@ -117,6 +122,7 @@ class CryptoContainer extends Component {
   }
 
   renderCoinDetailScreen(id) {
+    const { crypto } = this.props
     Animated.timing(
       this.state.openProgress,
       {
@@ -126,9 +132,9 @@ class CryptoContainer extends Component {
       }
     ).start(() => this.setState({showClose: true}))
     return (
-      <View>
+      <View style={{flex: 1}}>
         <Header
-          title={this.state.showClose ? this.props.crypto.data[this.state.selectedId].name : 'Cryptonite'}
+          title={this.state.showClose ? crypto.data[this.state.selectedId].name : 'Cryptonite'}
           leftButton={
             this.state.showClose ? (
               <View style={styles.closeContainer}>
@@ -140,17 +146,23 @@ class CryptoContainer extends Component {
               </View>
             ) : null
           } />
-        <Animated.View style={{
-          opacity: this.state.openProgress,
-          transform: [{
-            translateY: this.state.openProgress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [Math.min(height, this.coinsPosY[this.state.selectedId]), 0]
-            })
-          }]
-        }}>
-          {this.renderCoinDetail(this.state.selectedId)}
-        </Animated.View>
+        <ScrollView>
+          <Animated.View style={{
+            opacity: this.state.openProgress,
+            transform: [{
+              translateY: this.state.openProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [Math.min(height, this.coinsPosY[this.state.selectedId]), 0]
+              })
+            }]
+          }}>
+            {this.renderCoinDetail(this.state.selectedId)}
+          </Animated.View>
+          {this.state.showClose ?
+            <CoinRelatedNews
+              posts={this._newsByCoin(crypto.news, crypto.data[this.state.selectedId].symbol)}
+            /> : null}
+        </ScrollView>
       </View>
     )
   }
