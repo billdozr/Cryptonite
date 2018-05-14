@@ -21,15 +21,17 @@ const Post = ({item}) => {
   )
 }
 
-const CoinRelatedNews = ({posts}) => {
+const CoinRelatedNews = ({posts, max}) => {
+  const maxPosts = max ? max : 5
+  const thePosts = posts.slice(0, maxPosts)
   return (
     <View style={styles.container}>
-      {posts.length > 0 ?
+      {thePosts.length > 0 ?
         <View style={styles.heading}>
           <Text style={styles.headingTitle}>Related News</Text>
           <Text style={styles.newsSource}>via cryptopanic</Text>
         </View>: null}
-      {posts.map((post) => {
+      {thePosts.map((post) => {
         return (
           <TouchableOpacity key={post.id} onPress={() => Linking.openURL(post.url)}>
             <Post item={post} />

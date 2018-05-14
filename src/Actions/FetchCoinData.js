@@ -20,19 +20,23 @@ export default function FetchCoinData() {
             if (res2.data.next) {
               axios.get(res2.data.next)
                 .then(res3 => {
-                  res.data['news'] = res2.data.results.concat(res3.data.results)
-                  dispatch({type: FETCH_COIN_DATA_SUCCESS, payload: res.data})
-                })
-                .catch(err => {
-                  dispatch({type: FETCH_COIN_DATA_FAIL, payload: err.data})
+                  if (res3.data.next) {
+                    axios.get(res3.data.next)
+                      .then(res4 => {
+                        res.data['news'] = res2.data.results.concat(
+                          res3.data.results.concat(res4.data.results)
+                        )
+                        dispatch({type: FETCH_COIN_DATA_SUCCESS, payload: res.data})
+                      })
+                  } else {
+                    res.data['news'] = res2.data.results.concat(res3.data.results)
+                    dispatch({type: FETCH_COIN_DATA_SUCCESS, payload: res.data})
+                  }
                 })
             } else {
               res.data['news'] = res2.data.results
               dispatch({type: FETCH_COIN_DATA_SUCCESS, payload: res.data})
             }
-          })
-          .catch(err => {
-            dispatch({type: FETCH_COIN_DATA_FAIL, payload: err.data})
           })
       })
       .catch(err => {
