@@ -21,7 +21,7 @@
     "postinstall": "npm run remotedev && rndebugger-open"
   },
   "remotedev": {
-    "hostname": "192.168.0.11",
+    "hostname": "192.168.8.52",
     "port": 5678
   },
   "jest": {
