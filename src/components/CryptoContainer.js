@@ -123,15 +123,27 @@ class CryptoContainer extends Component {
 
   renderCoinDetailScreen(id) {
     const { crypto } = this.props
-    Animated.timing(
-      this.state.openProgress,
-      {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true
-      }
-    ).start(() => this.setState({showClose: true}))
-
+    const openDuration = 800
+    const relatedNewsProgress = new Animated.Value(0)
+    setTimeout(() => this.setState({showClose: true}), openDuration)
+    Animated.parallel([
+      Animated.timing(
+        this.state.openProgress,
+        {
+          toValue: 1,
+          duration: openDuration,
+          useNativeDriver: true
+        }
+      ),
+      Animated.timing(
+        relatedNewsProgress,
+        {
+          toValue: 1,
+          duration: openDuration * 2,
+          useNativeDriver: true
+        }
+      )
+    ]).start()
     const showClose = this.coinsPosY[this.state.selectedId] === 0 ? true : this.state.showClose
     return (
       <View style={{flex: 1}}>
