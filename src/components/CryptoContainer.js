@@ -26,7 +26,7 @@ class CryptoContainer extends Component {
   state = {
     selectedId: null,
     openProgress: new Animated.Value(1),
-    showClose: false
+    relatedNewsProgress: new Animated.Value(0)
   }
 
   coinsPosY = {}
@@ -62,7 +62,7 @@ class CryptoContainer extends Component {
                 duration: 300,
                 useNativeDriver: true
               }
-            ).start(() => this.setState({selectedId: key, showClose: false}))
+            ).start(() => this.setState({selectedId: key}))
           }}>
           <View>
             <CoinCard
@@ -123,9 +123,7 @@ class CryptoContainer extends Component {
 
   renderCoinDetailScreen(id) {
     const { crypto } = this.props
-    const openDuration = 800
-    const relatedNewsProgress = new Animated.Value(0)
-    setTimeout(() => this.setState({showClose: true}), openDuration)
+    const openDuration = 1000
     Animated.parallel([
       Animated.timing(
         this.state.openProgress,
@@ -136,29 +134,26 @@ class CryptoContainer extends Component {
         }
       ),
       Animated.timing(
-        relatedNewsProgress,
+        this.state.relatedNewsProgress,
         {
           toValue: 1,
-          duration: openDuration * 2,
+          duration: openDuration * 1.5,
           useNativeDriver: true
         }
       )
     ]).start()
-    const showClose = this.coinsPosY[this.state.selectedId] === 0 ? true : this.state.showClose
     return (
       <View style={{flex: 1}}>
         <Header
-          title={showClose ? crypto.data[this.state.selectedId].name : 'Cryptonite'}
+          title={crypto.data[this.state.selectedId].name}
           leftButton={
-            showClose ? (
-              <View style={styles.closeContainer}>
-                <TouchableOpacity
-                  onPress={() => this.setState({selectedId: null})}
-                  style={styles.closeButton}>
-                  <Text style={styles.closeText}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            ) : null
+            <View style={styles.closeContainer}>
+              <TouchableOpacity
+                onPress={() => this.setState({selectedId: null})}
+                style={styles.closeButton}>
+                <Text style={styles.closeText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           } />
         <ScrollView>
           <Animated.View style={{
@@ -172,7 +167,7 @@ class CryptoContainer extends Component {
           }}>
             {this.renderCoinDetail(this.state.selectedId)}
           </Animated.View>
-          <Animated.View style={{opacity: this.state.openProgress}}>
+          <Animated.View style={{opacity: this.state.relatedNewsProgress}}>
             <CoinRelatedNews
               posts={this._newsByCoin(crypto.news, crypto.data[this.state.selectedId].symbol)}
             />
